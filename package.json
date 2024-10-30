@@ -1,0 +1,35 @@
+{
+  "name": "movie",
+  "version": "1.0.0",
+  "description": "website to watch movie",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --inspect ./src/index.js",
+    "build-css": "sass src/resources/scss/style.scss src/public/css/style.css",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EmHieuLacLoi/movie.git"
+  },
+  "keywords": [
+    "movie"
+  ],
+  "author": "EmHieuLacLoi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EmHieuLacLoi/movie/issues"
+  },
+  "homepage": "https://github.com/EmHieuLacLoi/movie#readme",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "express": "^4.21.1",
+    "express-handlebars": "^8.0.1",
+    "mongoose": "^8.7.3",
+    "morgan": "^1.10.0",
+    "sass": "^1.80.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}

@@ -1,0 +1,25 @@
+<div class="mt-4">
+  <div class="row">
+
+    {{#each movie}}
+      <div class="col-md-2 mt-3">
+        <div class="card card-course-item">
+
+          <a href="/movie/{{this.slug}}">
+            <img src={{this.poster}} class="card-img-top"/>
+          </a>
+
+          <div class="card-body">
+
+            <a href="/movie/{{this.slug}}">
+              <h5 class="card-name">{{this.name}}</h5>
+            </a>
+            
+            <p class="card-des">{{this.year}}</p>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+
+  </div>
+</div>
