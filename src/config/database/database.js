@@ -1,8 +1,17 @@
+require('dotenv').config()
 const mongoose = require('mongoose')
 
 async function connect(dbName) {
     try {
-        await mongoose.connect(`mongodb://127.0.0.1:27017/${dbName}`)
+        const uri = process.env.MONGODB_URI;
+        await mongoose.connect(uri, {
+            dbName: dbName,
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        })
+
+        console.log(`Connected to database: ${dbName}`);
+        return mongoose.connection;
     } catch (e) {
         console.log('Connect false! ',e)
     }

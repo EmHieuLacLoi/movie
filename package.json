@@ -23,6 +23,7 @@
   "homepage": "https://github.com/EmHieuLacLoi/movie#readme",
   "dependencies": {
     "axios": "^1.7.7",
+    "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "express-handlebars": "^8.0.1",
     "mongoose": "^8.7.3",

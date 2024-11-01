@@ -34,5 +34,5 @@ app.set("views", path.join(__dirname, "src", "resources", "views"));
 route(app)
 
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on PORT: ${port}`);
 });
