@@ -12,6 +12,7 @@ db.connect('nodejs_dev')
 
 // static file public
 app.use(express.static(path.join(__dirname, "public")))
+app.use('/img', express.static(path.join(__dirname, "img")));
 
 // Log action
 app.use(morgan("combined"));
@@ -22,7 +23,8 @@ app.engine(
   handlebars.engine({
     extname: ".hbs",
     helpers: {
-      sum: (a, b) => a + b
+      sum: (a, b) => a + b,
+      div: (a, b) => a % b == 0,
     }
   })
 );

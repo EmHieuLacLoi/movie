@@ -19,4 +19,10 @@
   color: darkgrey;
 }
 
+.movie .img-movie {
+  width: 100%;
+  height: 400px;
+  object-fit: fill;
+}
+
 /*# sourceMappingURL=style.css.map */
