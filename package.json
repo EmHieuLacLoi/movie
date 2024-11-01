@@ -4,7 +4,7 @@
   "description": "website to watch movie",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --inspect ./src/index.js",
+    "start": "nodemon --inspect index.js",
     "build-css": "sass src/resources/scss/style.scss src/public/css/style.css",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
