@@ -11,7 +11,7 @@ const port = 3000;
 db.connect('nodejs_dev')
 
 // static file public
-app.use(express.static(path.join(__dirname, "src", "public")))
+app.use(express.static(path.join(__dirname, "public")))
 
 // Log action
 app.use(morgan("combined"));
