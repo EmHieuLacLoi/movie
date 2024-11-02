@@ -21,9 +21,17 @@
 }
 
 // movie
+.movie{
+  height: 400px; /* Adjust this value as needed */
+}
+
 .movie .img-movie {
   width: 100%;
-  height: 400px;
+  height: 100%;
   object-fit: fill;
+}
+
+.movie .title {
+  margin-top: -8px;
 }
 
