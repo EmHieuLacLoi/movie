@@ -25,7 +25,6 @@ class HomeController {
         for (let i = 0; i < link.length; i++) {
           info_movie["episodes"].push(data.movie.slug);
         }
-        console.log(param)
         res.render("movie", { info_movie });
       })
       .catch((error) => {
