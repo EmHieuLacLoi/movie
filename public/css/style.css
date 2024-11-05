@@ -55,4 +55,18 @@ hr.custom-hr {
   object-fit: cover;
 }
 
+/* CSS for the search button */
+.btn-outline-success {
+  white-space: nowrap; /* Prevent text from wrapping */
+  padding: 5px 10px; /* Adjust padding as needed */
+  width: max-content; /* Set a fixed width for the button */
+  text-align: center; /* Center the text */
+}
+
+@media (max-width: 576px) {
+  .btn-outline-success {
+    width: auto; /* Allow the button to resize on smaller screens */
+  }
+}
+
 /*# sourceMappingURL=style.css.map */
