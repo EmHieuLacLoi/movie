@@ -1,10 +1,11 @@
 const api = require("../../config/api/index.js");
+const slugify = require('slugify') 
 
 class HomeController {
   show(req, res, next) {
-    let link = req.path;
+    let param = req.path;
     api
-      .getData(link)
+      .getData(param)
       .then((data) => {
         let info_movie = {};
         info_movie["name"] = data.movie.name;
@@ -19,13 +20,27 @@ class HomeController {
         info_movie["country"] = data.movie.country[0].name;
 
 
-        info_movie["watch_movie"] = [];
-        link = data.episodes[0].server_data;
+        info_movie["episodes"] = [];
+        let link = data.episodes[0].server_data;
         for (let i = 0; i < link.length; i++) {
-          info_movie["watch_movie"].push(link[i].link_embed);
+          info_movie["episodes"].push(data.movie.slug);
         }
-
+        console.log(param)
         res.render("movie", { info_movie });
+      })
+      .catch((error) => {
+        next(error); 
+      });
+  }
+
+  watch(req, res, next) {
+    let param = '/' + req.params.slug;
+    let ep = Number(req.query.ep)
+    api
+      .getData(param)
+      .then((data) => {
+        let link = data.episodes[0].server_data[ep - 1].link_embed;
+        res.render("watchMovie", { link });
       })
       .catch((error) => {
         next(error); 
