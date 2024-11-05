@@ -11,7 +11,7 @@ class HomeController {
         info_movie["name"] = data.movie.name;
         info_movie["origin_name"] = data.movie.origin_name;
         info_movie["status"] = data.movie.episode_current;
-        info_movie["poster_url"] = data.movie.poster_url;
+        info_movie["thumb_url"] = data.movie.thumb_url;
         info_movie["time"] = data.movie.time;
         info_movie["episode_total"] = data.movie.episode_total;
         info_movie["year"] = data.movie.year;
