@@ -28,7 +28,8 @@ class HomeController {
         res.render("movie", { info_movie });
       })
       .catch((error) => {
-        next(error); 
+        let status = error.response.status
+        res.render('error', { status }) 
       });
   }
 
