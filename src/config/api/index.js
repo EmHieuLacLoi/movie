@@ -1,5 +1,5 @@
 const axios = require("axios");
-const BASE_URL = "https://ophim1.com/phim";
+const BASE_URL = "https://phimapi.com/phim";
 const SEARCH_URL = "https://phimapi.com/v1/api/tim-kiem"
 
 async function getData(path) {
