@@ -98,6 +98,7 @@ hr.custom-hr {
 .movie-names {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
 }
 
 .primary-name {
@@ -107,6 +108,11 @@ hr.custom-hr {
 .origin-name {
   font-size: 0.875rem;
   color: #666;
+}
+
+.movie-info a {
+  text-decoration: none;
+  color: #fff;
 }
 
 

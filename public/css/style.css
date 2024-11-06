@@ -73,14 +73,6 @@ hr.custom-hr {
   vertical-align: middle;
 }
 
-.table-custom .status {
-  color: green;
-}
-
-.table-custom .update-time {
-  color: red;
-}
-
 .table-custom img {
   width: 50px;
   height: 50px;
@@ -98,6 +90,7 @@ hr.custom-hr {
 .movie-names {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
 }
 
 .primary-name {
@@ -107,6 +100,11 @@ hr.custom-hr {
 .origin-name {
   font-size: 0.875rem;
   color: #666;
+}
+
+.movie-info a {
+  text-decoration: none;
+  color: #fff;
 }
 
 /*# sourceMappingURL=style.css.map */
