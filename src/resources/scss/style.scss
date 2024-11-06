@@ -75,5 +75,39 @@ hr.custom-hr {
   }
 }
 
+// CSS search page
+.table-custom th, .table-custom td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.table-custom img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  margin-right: 10px;
+  border-radius: 5px; /* Optional: for rounded corners */
+}
+
+.movie-info {
+  display: flex;
+  align-items: start;
+  gap: 1rem;
+}
+
+.movie-names {
+  display: flex;
+  flex-direction: column;
+}
+
+.primary-name {
+  font-weight: 500;
+}
+
+.origin-name {
+  font-size: 0.875rem;
+  color: #666;
+}
+
 
 

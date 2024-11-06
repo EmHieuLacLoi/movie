@@ -1,0 +1,38 @@
+<div class="container mt-5">
+  <table class="table table-dark table-hover table-custom">
+    <thead>
+      <tr>
+        <th>TÊN</th>
+        <th>NĂM</th>
+        <th>TÌNH TRẠNG</th>
+        <th>QUỐC GIA</th>
+        <th>CHẤT LƯỢNG</th>
+        <th>THỜI LƯỢNG</th>
+        <th>SUB</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each search_result}}
+        <tr>
+          <td>
+            <div class="movie-info">
+              <img src="{{thumb_url}}" alt="{{name}}" />
+              <div class="movie-names">
+                <div class="primary-name">{{name}}</div>
+                <div
+                  class="origin-name text-sm text-gray-600"
+                >{{origin_name}}</div>
+              </div>
+            </div>
+          </td>
+          <td>{{year}}</td>
+          <td><span class="badge text-bg-success status">{{status}}</span></td>
+          <td>{{country}}</td>
+          <td>{{quality}}</td>
+          <td>{{time}}</td>
+          <td>{{lang}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>

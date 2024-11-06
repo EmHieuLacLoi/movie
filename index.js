@@ -7,6 +7,10 @@ const db = require('./src/config/database/database.js')
 const app = express();
 const port = 3000;
 
+// Middleware setup - IMPORTANT: Place these BEFORE your routes
+app.use(express.json()); // For parsing application/json
+app.use(express.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
+
 // Connect MongoDB
 db.connect('nodejs_dev')
 
