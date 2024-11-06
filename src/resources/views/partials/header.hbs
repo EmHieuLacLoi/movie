@@ -30,3 +30,13 @@
     </div>
   </div>
 </nav>
+
+<script>
+  const aTag = document.querySelectorAll('.nav-link')
+  const url = new URL(window.location.href)
+  const pathName = url.pathname
+  if (pathName == '/new-movie') {
+    aTag[0].className = 'nav-link'
+    aTag[1].className = 'nav-link active'
+  }
+</script>
