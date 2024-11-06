@@ -39,6 +39,10 @@ hr.custom-hr {
   margin-top: 40px;
 }
 
+.footer {
+  text-decoration: none;
+}
+
 .video-container {
   position: relative;
   width: 100%;

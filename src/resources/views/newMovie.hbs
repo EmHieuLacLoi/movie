@@ -1,0 +1,95 @@
+<div class="container mt-5 d-flex flex-column align-items-center">
+  <table class="table table-dark table-hover table-custom">
+    <thead>
+      <tr>
+        <th>PHIM</th>
+        <th>NĂM</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each search_result}}
+        <tr>
+          <td>
+            <div class="movie-info">
+              <img src="{{thumb_url}}" alt="{{name}}" />
+              <div class="movie-names">
+                <div class="primary-name"><a
+                    href="/movie/{{slug}}"
+                  >{{name}}</a></div>
+                <div class="origin-name text-sm text-gray-600"><a
+                    href="/movie/{{slug}}"
+                  >{{origin_name}}</a></div>
+              </div>
+            </div>
+          </td>
+          <td>{{year}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  <div class="btn-group" role="group" aria-label="Basic example">
+    <input
+      type="radio"
+      class="btn-check"
+      name="options"
+      id="option1"
+      autocomplete="off"
+      checked
+    />
+    <label class="btn btn-secondary" for="option1">1</label>
+
+    <input
+      type="radio"
+      class="btn-check"
+      name="options"
+      id="option2"
+      autocomplete="off"
+    />
+    <label class="btn btn-secondary" for="option2">2</label>
+
+    <input
+      type="radio"
+      class="btn-check"
+      name="options"
+      id="option3"
+      autocomplete="off"
+    />
+    <label class="btn btn-secondary" for="option3">3</label>
+  </div>
+</div>
+
+<script>
+    const input = document.querySelectorAll('.btn-check');
+    for (let i = 0; i < input.length; i++) {
+
+        const url = new URL(window.location.href);
+        const pageParam = url.searchParams.get('page');
+        if (pageParam) {
+          input[parseInt(pageParam, 10)-1].setAttribute('checked', '');
+        } else {
+          console.log('error!')
+        }
+
+        input[i].addEventListener('click', e => {
+            for (const j of input) {
+                if (j.hasAttribute('checked')) {
+                    j.removeAttribute('checked');
+                }
+            }
+            input[i].setAttribute('checked', ''); 
+            
+            // Create and append hidden form submit element
+            const form = document.createElement('form');
+            form.method = 'post';
+            form.action = `/new-movie?page=${i + 1}`;
+            form.style.display = 'none';
+            const submitButton = document.createElement('button');
+            submitButton.type = 'submit';
+            form.appendChild(submitButton);
+            document.body.appendChild(form);
+            
+            // Submit the form
+            form.submit();
+        });
+    }
+</script>

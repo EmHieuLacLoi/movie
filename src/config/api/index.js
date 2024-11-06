@@ -1,6 +1,7 @@
 const axios = require("axios");
 const BASE_URL = "https://phimapi.com/phim";
 const SEARCH_URL = "https://phimapi.com/v1/api/tim-kiem"
+const UPDATED_MOVIE_URL = "https://phimapi.com/danh-sach/phim-moi-cap-nhat"
 
 async function getData(path) {
     try {
@@ -22,4 +23,14 @@ async function searchData(path) {
     }
 }
 
-module.exports = { getData, searchData }
+async function updatedMovieData(path) {
+    try {
+        const res = await axios.get(`${UPDATED_MOVIE_URL}?page=${path}`);
+        return res.data;
+    } catch (e) {
+        console.log("Error get data: ", e);
+        throw e; 
+    }
+}
+
+module.exports = { getData, searchData, updatedMovieData }
