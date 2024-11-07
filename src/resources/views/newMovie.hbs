@@ -134,16 +134,34 @@
 </div>
 
 <script>
-  const input = document.querySelectorAll('.btn-check'); for (let i = 0; i <
-  input.length; i++) { const url = new URL(window.location.href); const
-  pageParam = url.searchParams.get('page'); if (pageParam) {
-  input[parseInt(pageParam, 10)-1].setAttribute('checked', ''); } else {
-  console.log('error!') } input[i].addEventListener('click', e => { for (const j
-  of input) { if (j.hasAttribute('checked')) { j.removeAttribute('checked'); } }
-  input[i].setAttribute('checked', ''); // Create and append hidden form submit
-  element const form = document.createElement('form'); form.method = 'post';
-  form.action = `/new-movie?page=${i + 1}`; form.style.display = 'none'; const
-  submitButton = document.createElement('button'); submitButton.type = 'submit';
-  form.appendChild(submitButton); document.body.appendChild(form); // Submit the
-  form form.submit(); }); }
+  const input = document.querySelectorAll('.btn-check'); 
+  for (let i = 0; i < input.length; i++) { 
+
+    const url = new URL(window.location.href); 
+    const pageParam = url.searchParams.get('page'); 
+    if (pageParam) {
+      input[parseInt(pageParam, 10)-1].setAttribute('checked', ''); 
+    } else {
+      console.log('error!') 
+    } 
+
+    input[i].addEventListener('click', e => { 
+      for (const j of input) { 
+        if (j.hasAttribute('checked')) { 
+          j.removeAttribute('checked'); 
+        } 
+      }
+      input[i].setAttribute('checked', ''); // Create and append hidden form submit element 
+      const form = document.createElement('form'); 
+      form.method = 'post';
+      form.action = `/new-movie?page=${i + 1}`; 
+      form.style.display = 'none'; 
+      const submitButton = document.createElement('button'); 
+      submitButton.type = 'submit';
+      form.appendChild(submitButton); 
+      document.body.appendChild(form); // Submit the form 
+      form.submit(); 
+    }); 
+    
+  }
 </script>

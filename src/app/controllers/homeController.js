@@ -66,7 +66,10 @@ class HomeController {
         res.render("search", { search_result });
       })
       .catch((error) => {
-        let status = error.response.status;
+        let status = error.name
+        if (error.response) {
+          status = error.response.status;
+        }
         res.render("error", { status });
       });
   }
