@@ -46,12 +46,12 @@
       </table>
     </div>
 
-    <div class="d-grid gap-2 d-md-block mt-3">
-        <a href="/movie/watch/{{info_movie.episodes.[0]}}?ep=1"><button class="btn btn-primary">Xem Phim</button></a>
+    <div class="d-flex gap-2 d-md-block mt-2 mb-2">
+      <a href="/movie/watch/{{info_movie.episodes.[0]}}?ep=1"><button class="btn btn-primary">Xem Phim</button></a>
+      <button class="btn btn-primary ms-2">Thêm lối tắt</button>
     </div>
 
-
-    <div class="container mt-3">
+    <div class="container mt-2">
       <div class="row">
         <h4>Danh sách tập phim</h4>
         {{#each info_movie.episodes}}

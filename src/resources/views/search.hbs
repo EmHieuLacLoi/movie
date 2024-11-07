@@ -9,6 +9,7 @@
         <th>CHẤT LƯỢNG</th>
         <th>THỜI LƯỢNG</th>
         <th>SUB</th>
+        <th>LỐI TẮT</th>
       </tr>
     </thead>
     <tbody>
@@ -18,10 +19,12 @@
             <div class="movie-info">
               <img src="{{thumb_url}}" alt="{{name}}" />
               <div class="movie-names">
-                <div class="primary-name"><a href="/movie/{{slug}}">{{name}}</a></div>
-                <div
-                  class="origin-name text-sm text-gray-600"
-                ><a href="/movie/{{slug}}">{{origin_name}}</a></div>
+                <div class="primary-name"><a
+                    href="/movie/{{slug}}"
+                  >{{name}}</a></div>
+                <div class="origin-name text-sm text-gray-600"><a
+                    href="/movie/{{slug}}"
+                  >{{origin_name}}</a></div>
               </div>
             </div>
           </td>
@@ -31,8 +34,55 @@
           <td>{{quality}}</td>
           <td>{{time}}</td>
           <td>{{lang}}</td>
+          <td><button
+              type="button"
+              class="btn btn-outline-light btn-sm"
+              data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop"
+            >Thêm</button></td>
         </tr>
       {{/each}}
     </tbody>
   </table>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="staticBackdrop"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="staticBackdropLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Thông báo</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <h5>Bạn có muốn thêm lối tắt vào trang chủ không ?</h5>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >Không</button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-dismiss="modal"
+          >Có</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>

@@ -4,6 +4,7 @@
       <tr>
         <th class="text-start">PHIM</th>
         <th>NĂM</th>
+        <th>LỐI TẮT</th>
       </tr>
     </thead>
     <tbody>
@@ -23,10 +24,57 @@
             </div>
           </td>
           <td>{{year}}</td>
+          <td><button
+              type="button"
+              class="btn btn-outline-light btn-sm"
+              data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop"
+            >Thêm</button></td>
         </tr>
       {{/each}}
     </tbody>
   </table>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="staticBackdrop"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="staticBackdropLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Thông báo</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <h5>Bạn có muốn thêm lối tắt vào trang chủ không ?</h5>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >Không</button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-dismiss="modal"
+          >Có</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="btn-group" role="group" aria-label="Basic example">
     <input
       type="radio"
@@ -86,37 +134,16 @@
 </div>
 
 <script>
-    const input = document.querySelectorAll('.btn-check');
-    for (let i = 0; i < input.length; i++) {
-
-        const url = new URL(window.location.href);
-        const pageParam = url.searchParams.get('page');
-        if (pageParam) {
-          input[parseInt(pageParam, 10)-1].setAttribute('checked', '');
-        } else {
-          console.log('error!')
-        }
-
-        input[i].addEventListener('click', e => {
-            for (const j of input) {
-                if (j.hasAttribute('checked')) {
-                    j.removeAttribute('checked');
-                }
-            }
-            input[i].setAttribute('checked', ''); 
-            
-            // Create and append hidden form submit element
-            const form = document.createElement('form');
-            form.method = 'post';
-            form.action = `/new-movie?page=${i + 1}`;
-            form.style.display = 'none';
-            const submitButton = document.createElement('button');
-            submitButton.type = 'submit';
-            form.appendChild(submitButton);
-            document.body.appendChild(form);
-            
-            // Submit the form
-            form.submit();
-        });
-    }
+  const input = document.querySelectorAll('.btn-check'); for (let i = 0; i <
+  input.length; i++) { const url = new URL(window.location.href); const
+  pageParam = url.searchParams.get('page'); if (pageParam) {
+  input[parseInt(pageParam, 10)-1].setAttribute('checked', ''); } else {
+  console.log('error!') } input[i].addEventListener('click', e => { for (const j
+  of input) { if (j.hasAttribute('checked')) { j.removeAttribute('checked'); } }
+  input[i].setAttribute('checked', ''); // Create and append hidden form submit
+  element const form = document.createElement('form'); form.method = 'post';
+  form.action = `/new-movie?page=${i + 1}`; form.style.display = 'none'; const
+  submitButton = document.createElement('button'); submitButton.type = 'submit';
+  form.appendChild(submitButton); document.body.appendChild(form); // Submit the
+  form form.submit(); }); }
 </script>
