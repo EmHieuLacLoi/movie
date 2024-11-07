@@ -1,7 +1,8 @@
+<!-- Header -->
 <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
   <div class="container-fluid">
     <a class="navbar-brand" href="/">
-      <img src="/img/img1.png" alt="Logo" style="height: 40px; width: auto;" />
+      <img src="/img/logo.jpg" alt="Logo" style="height: 35px; width: 40px;" />
     </a>
     <button
       class="navbar-toggler"
@@ -22,6 +23,9 @@
         <li class="nav-item">
           <a class="nav-link" href="/new-movie">Phim mới cập nhật</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/notice">Thông báo</a>
+        </li>
       </ul>
       <form class="d-flex" role="search" method="POST" action="/search">
         <input class="form-control me-2" type="search" placeholder="Tìm gì đi?" id="search" name="search">
@@ -38,5 +42,12 @@
   if (pathName == '/new-movie') {
     aTag[0].className = 'nav-link'
     aTag[1].className = 'nav-link active'
+    aTag[2].className = 'nav-link'
+  }
+  if (pathName == '/notice') {
+    aTag[0].className = 'nav-link'
+    aTag[1].className = 'nav-link'
+    aTag[2].className = 'nav-link active'
   }
 </script>
+<!-- Content -->
