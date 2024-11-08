@@ -11,10 +11,10 @@ class HomeController {
         info_movie["name"] = data.movie.name;
         info_movie["origin_name"] = data.movie.origin_name;
         info_movie["status"] = data.movie.episode_current;
-        if (data.movie.thumb_url == "") {
-          info_movie["thumb_url"] = data.movie.poster_url;
-        } else {
+        if (data.movie.poster_url == "") {
           info_movie["thumb_url"] = data.movie.thumb_url;
+        } else {
+          info_movie["thumb_url"] = data.movie.poster_url;
         } 
         info_movie["time"] = data.movie.time;
         info_movie["episode_total"] = data.movie.episode_total;

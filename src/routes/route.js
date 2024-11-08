@@ -3,6 +3,8 @@ const movieRouter = require('./movie')
 const noticeRouter = require('./notice')
 function route(app) {
     app.use('/', homeRouter)
+    app.use('/home', homeRouter)
+
     app.use('/movie', movieRouter)
     app.use('/notice', noticeRouter)
     

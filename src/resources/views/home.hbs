@@ -9,6 +9,7 @@
               aria-label="Close"
               class="btn-close btn-close-custom position-absolute top-0 start-100 translate-middle bg-light border border-light rounded-circle d-none"
               data-bs-target="#staticBackdrop"
+              data-id="{{this._id}}"
             ></button>
           </div>
           <a href="/movie/{{this.slug}}">
@@ -22,6 +23,7 @@
           </div>
         </div>
       </div>
+
     {{/each}}
   </div>
 
@@ -57,13 +59,15 @@
           >Không</button>
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn btn-primary btn-yes"
             data-bs-dismiss="modal"
           >Có</button>
         </div>
       </div>
     </div>
   </div>
+
+  <form method="POST" class="form-submit" style="display: none;"></form>
 
 </div>
 <script>
@@ -77,7 +81,25 @@
   // Hiển thị modal khi nhấn vào button sử dụng Bootstrap's JavaScript API
   card.querySelector('.btn-close').addEventListener('click', () => {
     let myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
+    let dataId = event.target.getAttribute('data-id')
     myModal.show();
+
+    const btnYes = document.querySelector('.btn-yes') 
+    btnYes.addEventListener('click', e => {
+
+      // Create and append hidden form submit element 
+      const form = document.querySelector('.form-submit')
+      form.setAttribute('action', `/home/${dataId}?_method=DELETE`)
+      const submitButton = document.createElement('button'); 
+      submitButton.type = 'submit';
+      form.appendChild(submitButton); 
+      console.log(form)
+
+      // Submit the form 
+      form.submit(); 
+      
+    })
+
   });
   });
 </script>

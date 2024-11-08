@@ -42,7 +42,7 @@ class HomeController {
   }
 
   search(req, res, next) {
-    const body = req.body.search;
+    const body = req.query.search;
     const link_img = "https://phimimg.com/";
     api
       .searchData(body)
@@ -55,17 +55,17 @@ class HomeController {
           info_movie["slug"] = list[i].slug;
           info_movie["origin_name"] = list[i].origin_name;
           info_movie["status"] = list[i].episode_current;
-          if (list[i].thumb_url == "") {
-            if (list[i].poster_url.includes(link_img)) {
-              info_movie["thumb_url"] = list[i].poster_url;
-            } else {
-              info_movie["thumb_url"] = link_img + list[i].poster_url;
-            }
-          } else {
+          if (list[i].poster_url == "") {
             if (list[i].thumb_url.includes(link_img)) {
               info_movie["thumb_url"] = list[i].thumb_url;
             } else {
               info_movie["thumb_url"] = link_img + list[i].thumb_url;
+            }
+          } else {
+            if (list[i].poster_url.includes(link_img)) {
+              info_movie["thumb_url"] = list[i].poster_url;
+            } else {
+              info_movie["thumb_url"] = link_img + list[i].poster_url;
             }
           }
           info_movie["time"] = list[i].time;
@@ -98,7 +98,7 @@ class HomeController {
           info_movie["name"] = list[i].name;
           info_movie["slug"] = list[i].slug;
           info_movie["origin_name"] = list[i].origin_name;
-          info_movie["thumb_url"] = list[i].thumb_url;
+          info_movie["thumb_url"] = list[i].poster_url;
           info_movie["year"] = list[i].year;
           search_result.push(info_movie);
         }
@@ -112,7 +112,6 @@ class HomeController {
 
   update(req, res, next) {
     let body = 1
-    console.log(req.query.page)
     if (req.query.page) {
       body = req.query.page
     }
@@ -126,7 +125,7 @@ class HomeController {
           info_movie["name"] = list[i].name;
           info_movie["slug"] = list[i].slug;
           info_movie["origin_name"] = list[i].origin_name;
-          info_movie["thumb_url"] = list[i].thumb_url;
+          info_movie["thumb_url"] = list[i].poster_url;
           info_movie["year"] = list[i].year;
           search_result.push(info_movie);
         }
@@ -135,6 +134,44 @@ class HomeController {
       .catch((error) => {
         let status = error.response.status;
         res.render("error", { status });
+      });
+  }
+
+  delete(req, res, next) {
+    const id = req.params.id
+    console.log(id)
+    listMovie
+    .deleteOne({ _id : id })
+    .maxTimeMS(10000)
+    .catch(error => {
+      res.status(500).render("error", {
+        message: "Error delete",
+        error: error,
+      });
+    })
+    res.redirect('/home')
+  }
+
+  put(req, res, next) {
+    const data = req.body;
+    const prevUrl = req.headers.referer;
+    console.log(data.search)
+    listMovie
+      .insertMany({
+        name: data.name,
+        slug: data.slug,
+        poster: data.poster,
+        year: data.year,
+      })
+      .then(() => {
+        res.redirect(prevUrl);
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).render("error", {
+          message: "Error inserting data",
+          error: error,
+        });
       });
   }
 }

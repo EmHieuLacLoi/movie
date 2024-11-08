@@ -26,9 +26,13 @@
           <td>{{year}}</td>
           <td><button
               type="button"
-              class="btn btn-outline-light btn-sm"
+              class="btn btn-outline-light btn-sm btn-add"
               data-bs-toggle="modal"
               data-bs-target="#staticBackdrop"
+              data-name= "{{name}}"
+              data-slug="{{slug}}"
+              data-poster="{{thumb_url}}"
+              data-year="{{year}}"
             >Thêm</button></td>
         </tr>
       {{/each}}
@@ -67,7 +71,7 @@
           >Không</button>
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn btn-primary btn-yes"
             data-bs-dismiss="modal"
           >Có</button>
         </div>
@@ -134,6 +138,52 @@
 </div>
 
 <script>
+  //Add-shortcut
+  const btnAdd = document.querySelectorAll('.btn-add')
+  btnAdd.forEach(btn => {
+    btn.addEventListener('click', e => {
+      const objData = {}
+      objData['name'] = e.target.getAttribute('data-name')
+      objData['slug'] = e.target.getAttribute('data-slug')
+      objData['poster'] = e.target.getAttribute('data-poster')
+      objData['year'] = e.target.getAttribute('data-year')
+      
+      const btnYes = document.querySelector('.btn-yes') 
+      btnYes.addEventListener('click', e => {
+
+        // Create and append hidden form submit element 
+        const form = document.createElement('form'); 
+        form.method = 'post';
+        form.action = `/add-shortcut?_method=PUT`; 
+        form.style.display = 'none'; 
+
+        for (const [key, value] of Object.entries(objData)) {
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = key;
+          input.value = value;
+          form.appendChild(input);
+        }
+
+        const url = new URL(window.location.href)
+        let i = document.createElement('input');
+        i.type = 'hidden';
+        i.name = 'url';
+        i.value = url.pathname + url.search;
+        form.appendChild(i);
+
+        const submitButton = document.createElement('button'); 
+        submitButton.type = 'submit';
+        form.appendChild(submitButton); 
+        document.body.appendChild(form); 
+        
+        // Submit the form 
+        form.submit(); 
+      })
+    })
+  })
+
+  // pagination
   const input = document.querySelectorAll('.btn-check'); 
   for (let i = 0; i < input.length; i++) { 
 
@@ -151,7 +201,9 @@
           j.removeAttribute('checked'); 
         } 
       }
-      input[i].setAttribute('checked', ''); // Create and append hidden form submit element 
+      input[i].setAttribute('checked', ''); 
+      
+      // Create and append hidden form submit element 
       const form = document.createElement('form'); 
       form.method = 'post';
       form.action = `/new-movie?page=${i + 1}`; 
@@ -159,7 +211,9 @@
       const submitButton = document.createElement('button'); 
       submitButton.type = 'submit';
       form.appendChild(submitButton); 
-      document.body.appendChild(form); // Submit the form 
+      document.body.appendChild(form); 
+      
+      // Submit the form 
       form.submit(); 
     }); 
     

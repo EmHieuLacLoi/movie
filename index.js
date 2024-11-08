@@ -1,6 +1,7 @@
 const path = require("path")
 const express = require("express");
 const morgan = require("morgan");
+const methodOverride = require('method-override')
 const handlebars = require("express-handlebars");
 const route = require('./src/routes/route.js')
 const db = require('./src/config/database/database.js')
@@ -10,6 +11,12 @@ const port = 3000;
 // Middleware setup - IMPORTANT: Place these BEFORE your routes
 app.use(express.json()); // For parsing application/json
 app.use(express.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
+
+// override with the X-HTTP-Method-Override header in the request
+app.use(methodOverride('X-HTTP-Method-Override'))
+
+// override with POST having ?_method=DELETE
+app.use(methodOverride('_method'))
 
 // Connect MongoDB
 db.connect('nodejs_dev')
