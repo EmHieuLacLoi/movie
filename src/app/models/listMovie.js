@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const listMovie = new Schema(
   {
     name: { type: String },
-    slug: { type: String },
+    slug: { type: String, unique: true},
     poster: { type: String },
     year: { type: Number },
   },

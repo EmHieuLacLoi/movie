@@ -105,7 +105,10 @@ class HomeController {
         res.render("newMovie", { search_result });
       })
       .catch((error) => {
-        let status = error.response.status;
+        let status = error.name
+        if (error.response) {
+          status = error.response.status;
+        }
         res.render("error", { status });
       });
   }
@@ -132,7 +135,10 @@ class HomeController {
         res.render("newMovie", { search_result });
       })
       .catch((error) => {
-        let status = error.response.status;
+        let status = error.name
+        if (error.response) {
+          status = error.response.status;
+        }
         res.render("error", { status });
       });
   }
@@ -156,6 +162,7 @@ class HomeController {
     const data = req.body;
     const prevUrl = req.headers.referer;
     console.log(data.search)
+
     listMovie
       .insertMany({
         name: data.name,
@@ -168,11 +175,9 @@ class HomeController {
       })
       .catch((error) => {
         console.error(error);
-        res.status(500).render("error", {
-          message: "Error inserting data",
-          error: error,
-        });
+        res.redirect(prevUrl);
       });
+
   }
 }
 

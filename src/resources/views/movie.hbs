@@ -48,7 +48,13 @@
 
     <div class="d-flex gap-2 d-md-block mt-2 mb-2">
       <a href="/movie/watch/{{info_movie.episodes.[0]}}?ep=1"><button class="btn btn-primary">Xem Phim</button></a>
-      <button class="btn btn-primary ms-2">Thêm lối tắt</button>
+      <button class="btn btn-primary ms-2 btn-add" 
+              data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop"
+              data-name= "{{info_movie.name}}"
+              data-slug="{{info_movie.slug}}"
+              data-poster="{{info_movie.thumb_url}}"
+              data-year="{{info_movie.year}}">Thêm lối tắt</button>
     </div>
 
     <div class="container mt-2">
@@ -66,3 +72,71 @@
     </div>
   </div>
 </div>
+
+<form action="/add-shortcut?_method=PUT" method="POST" style="display: none;" class="form-submit"></form>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="staticBackdrop"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Thông báo</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <h5>Bạn có muốn thêm lối tắt vào trang chủ không ?</h5>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+        >Không</button>
+        <button
+          type="button"
+          class="btn btn-primary btn-yes"
+          data-bs-dismiss="modal"
+        >Có</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  btnAdd = document.querySelector('.btn-add')
+  btnAdd.addEventListener('click', e => {
+
+    const objData = {}
+    objData['name'] = e.target.getAttribute('data-name')
+    objData['slug'] = e.target.getAttribute('data-slug')
+    objData['poster'] = e.target.getAttribute('data-poster')
+    objData['year'] = e.target.getAttribute('data-year')
+
+    const btnYes = document.querySelector('.btn-yes') 
+    btnYes.addEventListener('click', e => {
+      form = document.querySelector('.form-submit')
+      for (const [key, value] of Object.entries(objData)) {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = value;
+        form.appendChild(input);
+      }
+      form.submit()
+    })
+
+  })
+</script>

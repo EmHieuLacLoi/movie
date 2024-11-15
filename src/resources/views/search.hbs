@@ -119,13 +119,6 @@
           form.appendChild(input);
         }
 
-        const url = new URL(window.location.href)
-        let i = document.createElement('input');
-        i.type = 'hidden';
-        i.name = 'url';
-        i.value = url.pathname + url.search;
-        form.appendChild(i);
-
         const submitButton = document.createElement('button'); 
         submitButton.type = 'submit';
         form.appendChild(submitButton); 

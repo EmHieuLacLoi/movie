@@ -11,6 +11,7 @@ class HomeController {
         info_movie["name"] = data.movie.name;
         info_movie["origin_name"] = data.movie.origin_name;
         info_movie["status"] = data.movie.episode_current;
+        info_movie["slug"] = data.movie.slug;
         if (data.movie.poster_url == "") {
           info_movie["thumb_url"] = data.movie.thumb_url;
         } else {
@@ -32,8 +33,11 @@ class HomeController {
         res.render("movie", { info_movie });
       })
       .catch((error) => {
-        let status = error.response.status
-        res.render('error', { status }) 
+        let status = error.name
+        if (error.response) {
+          status = error.response.status;
+        }
+        res.render("error", { status });
       });
   }
 
@@ -47,7 +51,11 @@ class HomeController {
         res.render("watchMovie", { link });
       })
       .catch((error) => {
-        next(error); 
+        let status = error.name
+        if (error.response) {
+          status = error.response.status;
+        }
+        res.render("error", { status });
       });
   }
 }
