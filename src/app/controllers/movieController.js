@@ -4,6 +4,7 @@ const slugify = require('slugify')
 class HomeController {
   show(req, res, next) {
     let param = req.path;
+    const link_img = "https://img.ophim.live/uploads/movies/";
     api
       .getData(param)
       .then((data) => {
@@ -12,11 +13,21 @@ class HomeController {
         info_movie["origin_name"] = data.movie.origin_name;
         info_movie["status"] = data.movie.episode_current;
         info_movie["slug"] = data.movie.slug;
-        if (data.movie.poster_url == "") {
-          info_movie["thumb_url"] = data.movie.thumb_url;
+
+        if (data.movie.poster_url == "" || !data.movie.poster_url) {
+          if (data.movie.thumb_url.includes(link_img)) {
+            info_movie["thumb_url"] = data.movie.thumb_url;
+          } else {
+            info_movie["thumb_url"] = link_img + data.movie.thumb_url;
+          }
         } else {
-          info_movie["thumb_url"] = data.movie.poster_url;
-        } 
+          if (data.movie.poster_url.includes(link_img)) {
+            info_movie["thumb_url"] = data.movie.poster_url;
+          } else {
+            info_movie["thumb_url"] = link_img + data.movie.poster_url;
+          }
+        }
+        
         info_movie["time"] = data.movie.time;
         info_movie["episode_total"] = data.movie.episode_total;
         info_movie["year"] = data.movie.year;
