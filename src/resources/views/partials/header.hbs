@@ -20,12 +20,25 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/">Trang chủ</a>
         </li>
+
         <li class="nav-item">
-          <a class="nav-link" href="/new-movie">Phim mới cập nhật</a>
+          <a class="nav-link" href="/new-movie">Phim mới</a>
         </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Thể loại <i class="fa-solid fa-caret-down" style="font-size: small;"></i>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Hành động</a></li>
+            <li><a class="dropdown-item" href="#">Tình cảm</a></li>
+          </ul>
+        </li>
+
         <li class="nav-item">
-          <a class="nav-link" href="/notice">Thông báo và hướng dẫn</a>
+          <a class="nav-link" href="/notice">Thông báo</a>
         </li>
+
       </ul>
       <form class="d-flex" role="search" method="GET" action="/search">
         <input class="form-control me-2" type="search" placeholder="Tìm gì đi?" id="search" name="search">
@@ -39,15 +52,22 @@
   const aTag = document.querySelectorAll('.nav-link')
   const url = new URL(window.location.href)
   const pathName = url.pathname
+
+  for (let i = 0; i < aTag.length; i++) {
+    aTag[i].className = 'nav-link'
+  }
+
+  if (pathName == '/' || pathName == '/home') {
+    aTag[0].className = 'nav-link active'
+  }
   if (pathName == '/new-movie') {
-    aTag[0].className = 'nav-link'
     aTag[1].className = 'nav-link active'
-    aTag[2].className = 'nav-link'
+  }
+  if (pathName == '/type') {
+    aTag[2].className = 'nav-link active'
   }
   if (pathName == '/notice') {
-    aTag[0].className = 'nav-link'
-    aTag[1].className = 'nav-link'
-    aTag[2].className = 'nav-link active'
+    aTag[3].className = 'nav-link active'
   }
 </script>
 <!-- Content -->

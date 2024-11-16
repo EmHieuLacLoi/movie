@@ -1,7 +1,7 @@
 const axios = require("axios");
-const BASE_URL = "https://phimapi.com/phim";
+const BASE_URL = "https://ophim1.com/phim";
 const SEARCH_URL = "https://phimapi.com/v1/api/tim-kiem"
-const UPDATED_MOVIE_URL = "https://phimapi.com/danh-sach/phim-moi-cap-nhat"
+const UPDATED_MOVIE_URL = "https://ophim1.com/danh-sach/phim-moi-cap-nhat"
 
 async function getData(path) {
     try {

@@ -147,14 +147,20 @@
   })
 
   // pagination
-  const input = document.querySelectorAll('.page-item'); 
-  console.log(input)
-
+  const input = document.querySelectorAll('.page-link'); 
+  
   for (let i = 0; i < input.length; i++) { 
-
+    
     const url = new URL(window.location.href); 
-    let pageParam = url.searchParams.get('page'); 
+    pageParam = url.searchParams.get('page'); 
     pageParam = parseInt(pageParam)
+
+    // Change text content at pagination
+    if (pageParam > 1) {
+      input[1].textContent = pageParam - 1
+      input[2].textContent = pageParam
+      input[3].textContent = pageParam + 1
+    }
 
     input[i].addEventListener('click', e => { 
 
@@ -168,8 +174,12 @@
       document.body.appendChild(form); 
 
       // Previous and next
+      if (!pageParam) {
+        pageParam = 1
+      }
+      
       if (i != 0 && i != input.length - 1) {
-        form.action = `/new-movie?page=${i}`; 
+        form.action = `/new-movie?page=${input[i].textContent}`;
       }
       if (i == 0) {
         if (pageParam - 1 > 0) {

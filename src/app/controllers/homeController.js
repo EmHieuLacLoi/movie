@@ -43,7 +43,7 @@ class HomeController {
 
   search(req, res, next) {
     const body = req.query.search;
-    const link_img = "https://phimimg.com/";
+    const link_img = "https://img.ophim.live/uploads/movies/";
     api
       .searchData(body)
       .then((data) => {
@@ -55,7 +55,8 @@ class HomeController {
           info_movie["slug"] = list[i].slug;
           info_movie["origin_name"] = list[i].origin_name;
           info_movie["status"] = list[i].episode_current;
-          if (list[i].poster_url == "") {
+          
+          if (list[i].poster_url == "" || !list[i].poster_url) {
             if (list[i].thumb_url.includes(link_img)) {
               info_movie["thumb_url"] = list[i].thumb_url;
             } else {
@@ -68,6 +69,7 @@ class HomeController {
               info_movie["thumb_url"] = link_img + list[i].poster_url;
             }
           }
+
           info_movie["time"] = list[i].time;
           info_movie["year"] = list[i].year;
           info_movie["quality"] = list[i].quality;
@@ -88,6 +90,7 @@ class HomeController {
 
   show(req, res, next) {
     let body = 1
+    const link_img = "https://img.ophim.live/uploads/movies/";
     api
       .updatedMovieData(body)
       .then((data) => {
@@ -98,7 +101,21 @@ class HomeController {
           info_movie["name"] = list[i].name;
           info_movie["slug"] = list[i].slug;
           info_movie["origin_name"] = list[i].origin_name;
-          info_movie["thumb_url"] = list[i].poster_url;
+
+          if (list[i].poster_url == "" || !list[i].poster_url) {
+            if (list[i].thumb_url.includes(link_img)) {
+              info_movie["thumb_url"] = list[i].thumb_url;
+            } else {
+              info_movie["thumb_url"] = link_img + list[i].thumb_url;
+            }
+          } else {
+            if (list[i].poster_url.includes(link_img)) {
+              info_movie["thumb_url"] = list[i].poster_url;
+            } else {
+              info_movie["thumb_url"] = link_img + list[i].poster_url;
+            }
+          }
+          
           info_movie["year"] = list[i].year;
           search_result.push(info_movie);
         }
