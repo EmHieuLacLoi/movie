@@ -3,7 +3,8 @@
     <thead>
       <tr>
         <th class="text-start">PHIM</th>
-        <th>NĂM</th>
+        <th>NĂM RA MẮT</th>
+        <th>THỜI GIAN CẬP NHẬT</th>
         <th>LỐI TẮT</th>
       </tr>
     </thead>
@@ -24,6 +25,7 @@
             </div>
           </td>
           <td>{{year}}</td>
+          <td>{{modified_time}}</td>
           <td><button
               type="button"
               class="btn btn-outline-light btn-sm btn-add"
@@ -33,6 +35,7 @@
               data-slug="{{slug}}"
               data-poster="{{thumb_url}}"
               data-year="{{year}}"
+              data-modified_time="{{modified_time}}"
             >Thêm</button></td>
         </tr>
       {{/each}}
@@ -110,6 +113,7 @@
       objData['slug'] = e.target.getAttribute('data-slug')
       objData['poster'] = e.target.getAttribute('data-poster')
       objData['year'] = e.target.getAttribute('data-year')
+      objData['modified_time'] = e.target.getAttribute('data-modified_time')
       
       const btnYes = document.querySelector('.btn-yes') 
       btnYes.addEventListener('click', e => {

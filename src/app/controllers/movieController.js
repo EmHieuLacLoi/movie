@@ -1,10 +1,9 @@
 const api = require("../../config/api/index.js");
 const slugify = require('slugify') 
-
+const link_img = "https://img.ophim.live/uploads/movies/";
 class HomeController {
   show(req, res, next) {
     let param = req.path;
-    const link_img = "https://img.ophim.live/uploads/movies/";
     api
       .getData(param)
       .then((data) => {
