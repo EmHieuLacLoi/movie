@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const slugify = require('slugify');
 
 // Configure global mongoose settings
 mongoose.set("debug", true); // Enable debug logging
@@ -34,45 +35,56 @@ class HomeController {
         });
 
         // Send error response
-        res.status(500).render("error", {
-          message: "Unable to fetch movies",
-          error: error,
+        res.render("error", {
+          status: "Không tìm thấy phim rồi!!!!",
         });
-
-        // Pass to error handling middleware
-        next(error);
       });
   }
 
   search(req, res, next) {
     const body = req.query.search;
-    // Tạo biểu thức chính quy từ các từ
-    const words = body.split(' ').join('.*');
+
+    const normalizedQuery = body
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+    
+    const toSlug = slugify(normalizedQuery)
+    console.log('Normalized Query:', normalizedQuery);
+    console.log('Original Body:', body);
+    
     newMovie
-    .find({name: { $regex: words, $options: 'i' } })
+    .find({
+      $or: [
+        { name: { $regex: normalizedQuery, $options: 'i' } },
+        { name: { $regex: body, $options: 'i' } },
+        { slug: { $regex: toSlug, $options: 'i' } },
+        { slug: { $regex: body, $options: 'i' } }
+      ]
+    })
     .then((movie) => {
       if (!movie || movie.length === 0) {
         console.warn("No movies found");
-        return res.render("home", { movie: [] });
+        res.render("error", { error });
       }
-
-      movie = multipleMongooseToObject(movie);
-      movie.forEach(m => {
-        m.poster = link_img + m.poster
-      })
-      res.render("home", { movie });
+      else {
+        movie = multipleMongooseToObject(movie);
+        movie.forEach(m => {
+          m.poster = link_img + m.poster
+        })
+        res.render("home", { movie });
+      }
     })
     .catch((error) => {
-      console.error("Database Query Error:", {
+      console.error("Query Error:", {
         message: error.message,
         name: error.name,
         code: error.code,
       });
 
       // Send error response
-      res.status(500).render("error", {
-        message: "Unable to fetch movies",
-        error: error,
+      res.render("error", {
+        status: "Không tìm thấy phim rồi!!!!",
       });
     });
   }
