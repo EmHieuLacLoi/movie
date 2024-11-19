@@ -8,5 +8,24 @@
     allowfullscreen
   >
   </iframe>
-
 </div>
+
+<div class="container mt-2">
+  <div class="row">
+    <h3>Danh sách tập phim</h3>
+    {{#each episodes}}
+      <div class="col-6 col-sm-4 col-md-3 col-lg-2 mt-3">
+        <button class="btn btn-secondary w-100 btn-ep"><a
+            href="/movie/watch/{{../param}}?ep={{sum @index 1}}"
+            class="text-white text-decoration-none"
+          >Tập {{sum @index 1}}</a></button>
+      </div>
+    {{/each}}
+  </div>
+</div>
+
+<script>
+  const buttons = document.querySelectorAll('.btn-ep')
+  let ep = url.search.slice(4, url.search.length)
+  buttons[ep-1].setAttribute('disabled', '')
+</script>

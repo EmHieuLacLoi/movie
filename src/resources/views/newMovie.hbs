@@ -132,7 +132,7 @@
           form.appendChild(input);
         }
 
-        const url = new URL(window.location.href)
+        let url = new URL(window.location.href)
         let i = document.createElement('input');
         i.type = 'hidden';
         i.name = 'url';

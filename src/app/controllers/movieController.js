@@ -58,7 +58,9 @@ class HomeController {
       .getData(param)
       .then((data) => {
         let link = data.episodes[0].server_data[ep - 1].link_embed;
-        res.render("watchMovie", { link });
+        let episodes = data.episodes[0].server_data
+        param = req.params.slug
+        res.render("watchMovie", { link, param, episodes });
       })
       .catch((error) => {
         let status = error.name
