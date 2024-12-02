@@ -9,7 +9,6 @@ const listMovie = require("../models/listMovie.js");
 const { multipleMongooseToObject } = require("../../utils/mongoose.js");
 const api = require("../../config/api/index.js");
 const newMovie = require("../models/newMovie.js");
-const { info } = require("sass");
 const link_img = "https://img.ophim.live/uploads/movies/";
 
 class HomeController {
@@ -70,9 +69,10 @@ class HomeController {
       else {
         movie = multipleMongooseToObject(movie);
         movie.forEach(m => {
-          m.poster = link_img + m.poster
+          if (!m.poster.includes(link_img))
+            m.poster = link_img + m.poster
         })
-        res.render("home", { movie });
+        res.render("search", { movie });
       }
     })
     .catch((error) => {

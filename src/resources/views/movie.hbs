@@ -73,8 +73,6 @@
   </div>
 </div>
 
-<form action="/add-shortcut?_method=PUT" method="POST" style="display: none;" class="form-submit"></form>
-
 <!-- Modal -->
 <div
   class="modal fade"
@@ -115,28 +113,44 @@
   </div>
 </div>
 
+<form method="POST" action="/add-shortcut?_method=PUT" style="display: none;" class="form-submit"></form>
+
 <script>
-  btnAdd = document.querySelector('.btn-add')
-  btnAdd.addEventListener('click', e => {
+  //Add-shortcut
+  const btnAdd = document.querySelectorAll('.btn-add')
+  btnAdd.forEach(btn => {
+    btn.addEventListener('click', e => {
+      const objData = {}
+      objData['name'] = e.target.getAttribute('data-name')
+      objData['slug'] = e.target.getAttribute('data-slug')
+      objData['poster'] = e.target.getAttribute('data-poster')
+      objData['year'] = e.target.getAttribute('data-year')
+      
+      const btnYes = document.querySelector('.btn-yes') 
+      btnYes.addEventListener('click', e => {
 
-    const objData = {}
-    objData['name'] = e.target.getAttribute('data-name')
-    objData['slug'] = e.target.getAttribute('data-slug')
-    objData['poster'] = e.target.getAttribute('data-poster')
-    objData['year'] = e.target.getAttribute('data-year')
+        // Create and append hidden form submit element 
+        const form = document.createElement('form'); 
+        form.method = 'post';
+        form.action = `/add-shortcut?_method=PUT`; 
+        form.style.display = 'none'; 
 
-    const btnYes = document.querySelector('.btn-yes') 
-    btnYes.addEventListener('click', e => {
-      form = document.querySelector('.form-submit')
-      for (const [key, value] of Object.entries(objData)) {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = key;
-        input.value = value;
-        form.appendChild(input);
-      }
-      form.submit()
+        for (const [key, value] of Object.entries(objData)) {
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = key;
+          input.value = value;
+          form.appendChild(input);
+        }
+
+        const submitButton = document.createElement('button'); 
+        submitButton.type = 'submit';
+        form.appendChild(submitButton); 
+        document.body.appendChild(form); 
+        
+        // Submit the form 
+        form.submit(); 
+      })
     })
-
   })
 </script>

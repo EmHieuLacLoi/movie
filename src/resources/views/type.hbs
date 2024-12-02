@@ -1,1 +1,185 @@
-<h1>Movie type</h1>
+<div class="container mt-5 d-flex flex-column align-items-center">
+  <table class="table table-dark table-hover table-custom">
+    <thead>
+      <tr>
+        <th class="text-start">PHIM</th>
+        <th>NĂM RA MẮT</th>
+        <th>LỐI TẮT</th>
+      </tr>
+    </thead>
+    <tbody class="table-content">
+      {{#each (limit movie 10)}}
+        <tr>
+          <td>
+            <div class="movie-info">
+              <img src="{{poster}}" alt="{{name}}" />
+              <div class="movie-names">
+                <div class="primary-name"><a
+                    href="/movie/{{slug}}"
+                  >{{name}}</a></div>
+                <div class="origin-name text-sm text-gray-600"><a
+                    href="/movie/{{slug}}"
+                  >{{this.origin_name}}</a></div>
+              </div>
+            </div>
+          </td>
+          <td>{{year}}</td>
+          <td><button
+              type="button"
+              class="btn btn-outline-light btn-sm btn-add"
+              data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop"
+              data-name= "{{name}}"
+              data-slug="{{slug}}"
+              data-poster="{{poster}}"
+              data-year="{{year}}"
+            >Thêm</button></td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="staticBackdrop"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="staticBackdropLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Thông báo</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <h5>Bạn có muốn thêm lối tắt vào trang chủ không ?</h5>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >Không</button>
+          <button
+            type="button"
+            class="btn btn-primary btn-yes"
+            data-bs-dismiss="modal"
+          >Có</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{!-- Xem thêm --}}
+  <div class="text-center my-3">
+    <button id="load-more" class="btn btn-outline-light">Xem thêm</button>
+  </div>
+
+</div>
+
+<script>
+  // Hàm gắn sự kiện "click" cho nút .btn-add
+  function attachAddButtonListeners() {
+    const btnAdd = document.querySelectorAll('.btn-add');
+    btnAdd.forEach(btn => {
+      btn.addEventListener('click', e => {
+        const objData = {};
+        objData['name'] = e.target.getAttribute('data-name');
+        objData['slug'] = e.target.getAttribute('data-slug');
+        objData['poster'] = e.target.getAttribute('data-poster');
+        objData['year'] = e.target.getAttribute('data-year');
+
+        const btnYes = document.querySelector('.btn-yes');
+        btnYes.addEventListener('click', () => {
+          // Tạo và submit form ẩn
+          const form = document.createElement('form');
+          form.method = 'post';
+          form.action = `/add-shortcut?_method=PUT`;
+          form.style.display = 'none';
+
+          for (const [key, value] of Object.entries(objData)) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = key;
+            input.value = value;
+            form.appendChild(input);
+          }
+
+          const submitButton = document.createElement('button');
+          submitButton.type = 'submit';
+          form.appendChild(submitButton);
+          document.body.appendChild(form);
+
+          // Submit form
+          form.submit();
+        });
+      });
+    });
+  }
+
+  // Gọi hàm attachAddButtonListeners lần đầu tiên khi trang load
+  attachAddButtonListeners();
+
+  // JavaScript - Thêm logic nút "Xem thêm"
+  const movies = {{{json movie}}}; // Dữ liệu danh sách phim từ Handlebars
+  let currentIndex = 10;           // Chỉ số hiện tại
+  const moviesPerPage = 10;        // Số lượng phim hiển thị mỗi lần nhấn "Xem thêm"
+  const moreBtn = document.getElementById('load-more');
+  const tbody = document.querySelector('.table-content');
+
+  if (movies.length <= 10) {
+    moreBtn.style.display = 'none';
+  } else {
+    moreBtn.addEventListener('click', () => {
+      for (let i = currentIndex; i < currentIndex + moviesPerPage; i++) {
+        if (i >= movies.length) {
+          moreBtn.style.display = 'none';
+          break; // Dừng nếu không còn phim
+        }
+        const movie = movies[i];
+        const row = `
+          <tr>
+            <td>
+              <div class="movie-info">
+                <img src="${movie.poster}" alt="${movie.name}" class="movie-poster" />
+                <div class="movie-names">
+                  <div class="primary-name"><a href="/movie/${movie.slug}">${movie.name}</a></div>
+                  <div class="origin-name text-sm text-gray-600"><a href="/movie/${movie.slug}">${movie.origin_name}</a></div>
+                </div>
+              </div>
+            </td>
+            <td>${movie.year}</td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-outline-light btn-sm btn-add"
+                data-bs-toggle="modal"
+                data-bs-target="#staticBackdrop"
+                data-name="${movie.name}"
+                data-slug="${movie.slug}"
+                data-poster="${movie.poster}"
+                data-year="${movie.year}"
+              >Thêm</button>
+            </td>
+          </tr>
+        `;
+        tbody.innerHTML += row; // Thêm hàng vào bảng
+      }
+
+      // Cập nhật chỉ số hiện tại
+      currentIndex += moviesPerPage;
+
+      // Gọi lại hàm attachAddButtonListeners để gắn sự kiện cho các nút mới
+      attachAddButtonListeners();
+    });
+  }
+</script>

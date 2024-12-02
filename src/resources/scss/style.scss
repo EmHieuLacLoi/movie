@@ -134,6 +134,26 @@ hr.custom-hr {
   --bs-border-color: #495057;
 }
 
+// drop down menu
+.dropdown-menu {
+  min-width: 400px;
+  border: none;
+  padding: 5px;
+}
+
+.td-type a {
+  color: rgba(240, 248, 255, 0.541);
+}
+
+.td-type:hover {
+  background-color: #314aad;
+  border-radius: 5px;
+}
+
+.td-type:hover a {
+  color: #ffffff;
+}
+
 
 
 

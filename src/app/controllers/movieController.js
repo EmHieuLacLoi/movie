@@ -1,7 +1,7 @@
 const api = require("../../config/api/index.js");
 const slugify = require('slugify') 
 const link_img = "https://img.ophim.live/uploads/movies/";
-class HomeController {
+class MovieController {
   show(req, res, next) {
     let param = req.path;
     api
@@ -72,4 +72,4 @@ class HomeController {
   }
 }
 
-module.exports = new HomeController();
+module.exports = new MovieController();

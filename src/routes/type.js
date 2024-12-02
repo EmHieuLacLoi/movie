@@ -3,6 +3,6 @@ const router = express.Router()
 
 const typeController = require('../app/controllers/typeController.js');
 
-router.get('/', typeController.home)
+router.get('/:slug', typeController.home)
 
 module.exports = router

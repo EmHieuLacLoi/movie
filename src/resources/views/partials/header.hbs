@@ -29,10 +29,45 @@
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Thể loại <i class="fa-solid fa-caret-down" style="font-size: small;"></i>
           </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Hành động</a></li>
-            <li><a class="dropdown-item" href="#">Tình cảm</a></li>
-          </ul>
+          <div class="dropdown-menu">
+            <table class="table text-center table-borderless container m-0">
+              <tbody>
+                <tr>
+                  <td class="td-type" onclick="navigateTo(this)"><a href="/type/hanh-dong" class="text-decoration-none">Hành Động</a></td>
+                  <td class="td-type" onclick="navigateTo(this)"><a href="/type/vien-tuong" class="text-decoration-none">Viễn Tưởng</a></td>
+                  <td class="td-type" onclick="navigateTo(this)"><a href="/type/bi-an" class="text-decoration-none">Bí Ẩn</a></td>
+                  <td class="td-type" onclick="navigateTo(this)"><a href="/type/tam-ly" class="text-decoration-none">Tâm Lý</a></td>
+                </tr>
+                <tr>
+                  <td class="td-type" onclick="navigateTo(this)"><a href="/type/am-nhac" class="text-decoration-none">Âm Nhạc</a></td>
+                  <td class="td-type" onclick="navigateTo(this)"><a href="/type/hai-huoc" class="text-decoration-none">Hài Hước</a></td>
+                  <td class="td-type" onclick="navigateTo(this)"><a href="/type/khoa-hoc" class="text-decoration-none">Khoa Học</a></td>
+                  <td class="td-type" onclick="navigateTo(this)"><a href="/type/kinh-dien" class="text-decoration-none">Kinh Điển</a></td>
+                </tr>
+                <tr>
+                  <td class="td-type" onclick="navigateTo(this)"><a href="/type/co-trang" class="text-decoration-none">Cổ Trang</a></td>
+                  <td class="td-type" onclick="navigateTo(this)"><a href="/type/kinh-di" class="text-decoration-none">Kinh Dị</a></td>
+                  <td class="td-type" onclick="navigateTo(this)"><a href="/type/the-thao" class="text-decoration-none">Thể Thao</a></td>
+                  <td class="td-type" onclick="navigateTo(this)"><a href="/type/gia-dinh" class="text-decoration-none">Gia Đình</a></td>
+                </tr>
+                <tr>
+                  <td class="td-type" onclick="navigateTo(this)"><a href="/type/hinh-su" class="text-decoration-none">Hình Sự</a></td>
+                  <td class="td-type" onclick="navigateTo(this)"><a href="/type/than-thoai" class="text-decoration-none">Thần Thoại</a></td>
+                  <td class="td-type" onclick="navigateTo(this)"><a href="/type/chien-tranh" class="text-decoration-none">Chiến Tranh</a></td>
+                  <td class="td-type" onclick="navigateTo(this)"><a href="/type/tai-lieu" class="text-decoration-none">Tài Liệu</a></td>
+                </tr>
+                <tr>
+                  <td class="td-type" onclick="navigateTo(this)"><a href="/type/tinh-cam" class="text-decoration-none">Tình Cảm</a></td>
+                  <td class="td-type" onclick="navigateTo(this)"><a href="/type/phieu-luu" class="text-decoration-none">Phiêu Lưu</a></td>
+                  <td class="td-type" onclick="navigateTo(this)"><a href="/type/hoc-duong" class="text-decoration-none">Học Đường</a></td>
+                  <td class="td-type" onclick="navigateTo(this)"><a href="/type/vo-thuat" class="text-decoration-none">Võ Thuật</a></td>
+                </tr>
+                <tr>
+                  <td class="td-type" onclick="navigateTo(this)"><a href="/type/chinh-kich" class="text-decoration-none">Chính Kịch</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </li>
 
         <li class="nav-item">
@@ -48,7 +83,18 @@
   </div>
 </nav>
 
+
+<form method="POST" class="form-submit" style="display: none;"></form>
+
 <script>
+  function navigateTo(element) {
+    // Tìm thẻ <a> bên trong <td> được click
+    const link = element.querySelector('a');
+    if (link && link.href) {
+      window.location.href = link.href; // Điều hướng đến URL của thẻ <a>
+    }
+  }
+
   const aTag = document.querySelectorAll('.nav-link')
   const url = new URL(window.location.href)
   const pathName = url.pathname
@@ -69,5 +115,6 @@
   if (pathName == '/notice') {
     aTag[3].className = 'nav-link active'
   }
+  
 </script>
 <!-- Content -->

@@ -3,21 +3,16 @@
     <thead>
       <tr>
         <th>TÊN</th>
-        <th>NĂM</th>
-        <th>TÌNH TRẠNG</th>
-        <th>QUỐC GIA</th>
-        <th>CHẤT LƯỢNG</th>
-        <th>THỜI LƯỢNG</th>
-        <th>SUB</th>
+        <th>NĂM RA MẮT</th>
         <th>LỐI TẮT</th>
       </tr>
     </thead>
-    <tbody>
-      {{#each search_result}}
+    <tbody class="table-content">
+      {{#each (limit movie 10)}}
         <tr>
           <td>
             <div class="movie-info">
-              <img src="{{thumb_url}}" alt="{{name}}" />
+              <img src="{{poster}}" alt="{{name}}" />
               <div class="movie-names">
                 <div class="primary-name"><a
                     href="/movie/{{slug}}"
@@ -29,11 +24,6 @@
             </div>
           </td>
           <td>{{year}}</td>
-          <td><span class="badge text-bg-success status">{{status}}</span></td>
-          <td>{{country}}</td>
-          <td>{{quality}}</td>
-          <td>{{time}}</td>
-          <td>{{lang}}</td>
           <td><button
               type="button"
               class="btn btn-outline-light btn-sm btn-add"
@@ -41,7 +31,7 @@
               data-bs-target="#staticBackdrop"
               data-name= "{{name}}"
               data-slug="{{slug}}"
-              data-poster="{{thumb_url}}"
+              data-poster="{{poster}}"
               data-year="{{year}}"
             >Thêm</button></td>
         </tr>
@@ -89,44 +79,107 @@
     </div>
   </div>
 
+  {{!-- Xem thêm --}}
+  <div class="text-center my-3">
+    <button id="load-more" class="btn btn-outline-light">Xem thêm</button>
+  </div>
+
 </div>
 
 <script>
-  //Add-shortcut
-  const btnAdd = document.querySelectorAll('.btn-add')
-  btnAdd.forEach(btn => {
-    btn.addEventListener('click', e => {
-      const objData = {}
-      objData['name'] = e.target.getAttribute('data-name')
-      objData['slug'] = e.target.getAttribute('data-slug')
-      objData['poster'] = e.target.getAttribute('data-poster')
-      objData['year'] = e.target.getAttribute('data-year')
+  // Hàm gắn sự kiện "click" cho nút .btn-add
+  function attachAddButtonListeners() {
+    const btnAdd = document.querySelectorAll('.btn-add');
+    btnAdd.forEach(btn => {
+      btn.addEventListener('click', e => {
+        const objData = {};
+        objData['name'] = e.target.getAttribute('data-name');
+        objData['slug'] = e.target.getAttribute('data-slug');
+        objData['poster'] = e.target.getAttribute('data-poster');
+        objData['year'] = e.target.getAttribute('data-year');
 
-      const btnYes = document.querySelector('.btn-yes') 
-      btnYes.addEventListener('click', e => {
+        const btnYes = document.querySelector('.btn-yes');
+        btnYes.addEventListener('click', () => {
+          // Tạo và submit form ẩn
+          const form = document.createElement('form');
+          form.method = 'post';
+          form.action = `/add-shortcut?_method=PUT`;
+          form.style.display = 'none';
 
-        // Create and append hidden form submit element 
-        const form = document.createElement('form'); 
-        form.method = 'post';
-        form.action = `/add-shortcut?_method=PUT`; 
-        form.style.display = 'none'; 
+          for (const [key, value] of Object.entries(objData)) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = key;
+            input.value = value;
+            form.appendChild(input);
+          }
 
-        for (const [key, value] of Object.entries(objData)) {
-          const input = document.createElement('input');
-          input.type = 'hidden';
-          input.name = key;
-          input.value = value;
-          form.appendChild(input);
+          const submitButton = document.createElement('button');
+          submitButton.type = 'submit';
+          form.appendChild(submitButton);
+          document.body.appendChild(form);
+
+          // Submit form
+          form.submit();
+        });
+      });
+    });
+  }
+
+  // Gọi hàm attachAddButtonListeners lần đầu tiên khi trang load
+  attachAddButtonListeners();
+
+  // JavaScript - Thêm logic nút "Xem thêm"
+  const movies = {{{json movie}}}; // Dữ liệu danh sách phim từ Handlebars
+  let currentIndex = 10;           // Chỉ số hiện tại
+  const moviesPerPage = 10;        // Số lượng phim hiển thị mỗi lần nhấn "Xem thêm"
+  const moreBtn = document.getElementById('load-more');
+  const tbody = document.querySelector('.table-content');
+
+  if (movies.length <= 10) {
+    moreBtn.style.display = 'none';
+  } else {
+    moreBtn.addEventListener('click', () => {
+      for (let i = currentIndex; i < currentIndex + moviesPerPage; i++) {
+        if (i >= movies.length) {
+          moreBtn.style.display = 'none';
+          break; // Dừng nếu không còn phim
         }
+        const movie = movies[i];
+        const row = `
+          <tr>
+            <td>
+              <div class="movie-info">
+                <img src="${movie.poster}" alt="${movie.name}" class="movie-poster" />
+                <div class="movie-names">
+                  <div class="primary-name"><a href="/movie/${movie.slug}">${movie.name}</a></div>
+                  <div class="origin-name text-sm text-gray-600"><a href="/movie/${movie.slug}">${movie.origin_name}</a></div>
+                </div>
+              </div>
+            </td>
+            <td>${movie.year}</td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-outline-light btn-sm btn-add"
+                data-bs-toggle="modal"
+                data-bs-target="#staticBackdrop"
+                data-name="${movie.name}"
+                data-slug="${movie.slug}"
+                data-poster="${movie.poster}"
+                data-year="${movie.year}"
+              >Thêm</button>
+            </td>
+          </tr>
+        `;
+        tbody.innerHTML += row; // Thêm hàng vào bảng
+      }
 
-        const submitButton = document.createElement('button'); 
-        submitButton.type = 'submit';
-        form.appendChild(submitButton); 
-        document.body.appendChild(form); 
-        
-        // Submit the form 
-        form.submit(); 
-      })
-    })
-  })
+      // Cập nhật chỉ số hiện tại
+      currentIndex += moviesPerPage;
+
+      // Gọi lại hàm attachAddButtonListeners để gắn sự kiện cho các nút mới
+      attachAddButtonListeners();
+    });
+  }
 </script>

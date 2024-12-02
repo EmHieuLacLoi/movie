@@ -35,6 +35,13 @@ app.engine(
     helpers: {
       sum: (a, b) => a + b,
       div: (a, b) => a % b == 0,
+      limit: function (arr, limit) {
+        if (!Array.isArray(arr)) return [];
+        return arr.slice(0, limit);
+      },
+      json: function(context) {
+        return JSON.stringify(context);
+      },
     }
   })
 );
