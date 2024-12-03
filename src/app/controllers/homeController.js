@@ -58,7 +58,9 @@ class HomeController {
         { name: { $regex: normalizedQuery, $options: 'i' } },
         { name: { $regex: body, $options: 'i' } },
         { slug: { $regex: toSlug, $options: 'i' } },
-        { slug: { $regex: body, $options: 'i' } }
+        { slug: { $regex: body, $options: 'i' } },
+        { origin_name: {$regex: normalizedQuery, $options: 'i' } },
+        { origin_name: {$regex: body, $options: 'i' } }
       ]
     })
     .then((movie) => {
