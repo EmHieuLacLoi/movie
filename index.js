@@ -2,6 +2,7 @@ const path = require("path")
 const express = require("express");
 const morgan = require("morgan");
 const methodOverride = require('method-override')
+const cookieParser = require('cookie-parser')
 const handlebars = require("express-handlebars");
 const route = require('./src/routes/route.js')
 const db = require('./src/config/database/database.js')
@@ -23,6 +24,10 @@ db.connect('nodejs_dev')
 
 // static file public
 app.use(express.static(path.join(__dirname, "public")))
+
+// Use cookies
+require('dotenv').config()
+app.use(cookieParser(process.env.COOKIEPARSER))
 
 // Log action
 app.use(morgan("combined"));

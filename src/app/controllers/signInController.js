@@ -33,10 +33,10 @@ class signInController {
             }
             else {
                 user = multipleMongooseToObject(user)[0]
-                console.log(user.password)
                 if (bcrypt.compareSync(password, user.password) == false) {
                     res.render('signin', { infoError })
                 } else {
+                    console.log('Cookies: ', req.cookies['user'])
                     let userCookie = {
                         name: username,
                         isAdmin: user.isAdmin
