@@ -10,34 +10,41 @@ const { multipleMongooseToObject } = require("../../utils/mongoose.js");
 const api = require("../../config/api/index.js");
 const newMovie = require("../models/newMovie.js");
 const link_img = "https://img.ophim.live/uploads/movies/";
+const userInfo = require("../models/userInfo.js");
 
 class HomeController {
-  home(req, res, next) {
-    // Add more robust error handling
-    listMovie
-      .find({})
-      .maxTimeMS(10000) // Set maximum query time
-      .then((movie) => {
-        if (!movie || movie.length === 0) {
-          console.warn("No movies found");
-          return res.render("home", { movie: [] });
-        }
+  async home(req, res, next) {
+    try {
+      if (req.cookies["user"] == undefined) return res.render("home", { movies: [], status: false });
+      let username = req.cookies["user"].name;
+  
+      //Tìm user trước
+      let user = await userInfo.findOne({ username: username });
+  
+      if (!user) {
+        console.error("Không tìm thấy user!");
+        return res.redirect(prevUrl);
+      }
 
-        movie = multipleMongooseToObject(movie);
-        res.render("home", { movie });
+      //Lấy danh sách phim user lưu
+      if (user.movies == "") {
+        res.render("home", { movies: [], status: false, isLoggedIn: true });
+      } 
+      else {
+        let movieSlugs = user.movies.split(";").filter(slug => slug); // Loại bỏ chuỗi rỗng
+  
+        //Tìm phim trong listMovie dựa trên slug
+        let movies = await listMovie.find({ slug: { $in: movieSlugs } });
+  
+        movies = multipleMongooseToObject(movies);
+        res.render("home", { movies, status: true });
+      }
+    } catch (error) {
+      console.error("Lỗi truy vấn dữ liệu:", error)
+      res.render("error", {
+        status: "Lỗi cập nhật dữ liệu",
       })
-      .catch((error) => {
-        console.error("Database Query Error:", {
-          message: error.message,
-          name: error.name,
-          code: error.code,
-        });
-
-        // Send error response
-        res.render("error", {
-          status: "Không tìm thấy phim rồi!!!!",
-        });
-      });
+    }
   }
 
   search(req, res, next) {
@@ -49,9 +56,7 @@ class HomeController {
     .replace(/[\u0300-\u036f]/g, '');
     
     const toSlug = slugify(normalizedQuery)
-    console.log('Normalized Query:', normalizedQuery);
-    console.log('Original Body:', body);
-    
+
     newMovie
     .find({
       $or: [
@@ -91,6 +96,7 @@ class HomeController {
     });
   }
 
+  // Show trang 1 phim moi cap nhat
   show(req, res, next) {
     let body = 1
     api
@@ -132,7 +138,9 @@ class HomeController {
         res.render("error", { status });
       });
   }
+  
 
+  // Show cac phim moi cap nhat
   update(req, res, next) {
     let body = 1
     if (req.query.page) {
@@ -148,7 +156,6 @@ class HomeController {
           info_movie["name"] = list[i].name;
           info_movie["slug"] = list[i].slug;
           info_movie["origin_name"] = list[i].origin_name;
-          
           if (list[i].poster_url == "" || !list[i].poster_url) {
             if (list[i].thumb_url.includes(link_img)) {
               info_movie["thumb_url"] = list[i].thumb_url;
@@ -162,7 +169,6 @@ class HomeController {
               info_movie["thumb_url"] = link_img + list[i].poster_url;
             }
           }
-
           info_movie["year"] = list[i].year;
           info_movie["modified_time"] = list[i].modified.time.slice(0, 10)
           search_result.push(info_movie);
@@ -177,43 +183,105 @@ class HomeController {
         res.render("error", { status });
       });
   }
+  
 
-  delete(req, res, next) {
-    const id = req.params.id
-    console.log(id)
-    listMovie
-    .deleteOne({ _id : id })
-    .maxTimeMS(10000)
-    .catch(error => {
-      res.status(500).render("error", {
-        message: "Error delete",
-        error: error,
+  async delete(req, res, next) {
+    const id = req.params.id;
+  
+    try {
+      let infoMovie = await listMovie.findOne({ _id: id })
+      let username = req.cookies["user"].name;
+      let slugRemove = infoMovie.slug
+
+      //Tìm user trước
+      let user = await userInfo.findOne({ username: username });
+      
+      if (!user) {
+        console.error("Không tìm thấy user!");
+        return res.redirect(prevUrl);
+      }
+
+      if (user.movies.includes(slugRemove)) {
+        let updateMovie = '';
+        let movieSlugs = user.movies.split(";").filter(slug => slug); // Loại bỏ chuỗi rỗng
+        for (let  i = 0; i < movieSlugs.length; i++) {
+          if (!movieSlugs[i].includes(slugRemove)) {
+            updateMovie += movieSlugs[i] + ';'
+          }
+        }
+        //Cập nhật userInfo (Danh sách phim yêu thích)
+        await userInfo.updateOne(
+          { username: username },
+          { $set: { movies: updateMovie } }
+        );
+      } else {
+        return res.redirect(prevUrl);
+      }
+
+      res.redirect('/home');
+    } catch (error) {
+      console.error("Lỗi xóa dữ liệu:", {
+        message: error.message,
+        name: error.name,
+        code: error.code,
       });
-    })
-    res.redirect('/home')
+      res.status(500).send("Có lỗi xảy ra khi xóa dữ liệu.");
+    }
   }
+  
 
-  put(req, res, next) {
-    const data = req.body;
-    const prevUrl = req.headers.referer;
-    console.log(data.search)
-
-    listMovie
-      .insertMany({
-        name: data.name,
-        slug: data.slug,
-        poster: data.poster,
-        year: data.year,
-      })
-      .then(() => {
+  async put(req, res, next) {
+    try {
+      const data = req.body;
+      const prevUrl = req.headers.referer;
+      let username = req.cookies["user"].name;
+  
+      //Tìm user trước
+      let user = await userInfo.findOne({ username: username });
+  
+      if (!user) {
+        console.error("Không tìm thấy user!");
+        return res.redirect(prevUrl);
+      }
+  
+      //Cập nhật danh sách phim của user
+      if (user.movies.includes(data.slug)) {
+        console.error("Phim đã được lưu trước đó rồi!");
+        return res.redirect(prevUrl);
+      } else {
+        let updateMovie = user.movies ? `${user.movies}${data.slug};` : `${data.slug};`;
+    
+        //Cập nhật userInfo (Danh sách phim yêu thích)
+        const updateUserPromise = userInfo.updateOne(
+          { username: username },
+          { $set: { movies: updateMovie } }
+        );
+    
+        //Thêm phim vào listMovie nếu chưa có
+        const addMoviePromise = listMovie.updateOne(
+          { slug: data.slug }, // Kiểm tra nếu đã có phim này thì không thêm nữa
+          {
+            $setOnInsert: {
+              name: data.name,
+              slug: data.slug,
+              poster: data.poster,
+              year: data.year,
+            },
+          },
+          { upsert: true } // Nếu chưa có thì thêm mới
+        );
+    
+        //Chờ cả hai thao tác hoàn thành
+        await Promise.all([updateUserPromise, addMoviePromise]);
+    
+        console.log("Cập nhật thành công!");
         res.redirect(prevUrl);
-      })
-      .catch((error) => {
-        console.error(error);
-        res.redirect(prevUrl);
-      });
-
-  }
+      }
+    } catch (error) {
+      console.error("Lỗi khi cập nhật dữ liệu: ", error);
+      res.redirect(prevUrl);
+    }
+  }    
 }
 
 module.exports = new HomeController();

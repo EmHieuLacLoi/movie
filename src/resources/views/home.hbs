@@ -1,6 +1,8 @@
 <div class="mt-4">
   <div class="row">
-    {{#each movie}}
+    {{#if status}}
+
+    {{#each movies}}
       <div class="col-md-2 mt-3">
         <div class="card card-course-item">
           <div class="position-relative">
@@ -23,8 +25,36 @@
           </div>
         </div>
       </div>
-
     {{/each}}
+
+    {{else}}
+
+      {{#if isLoggedIn}}
+        <!-- Nếu đã đăng nhập nhưng không có phim -->
+        <div class="alert alert-danger text-center alert-info" role="alert">
+          <h4 class="alert-heading">🎬 Chưa có phim nào trong danh sách!</h4>
+          <p>Hãy vào <a href="/new-movie" class="alert-link">Phim mới</a> hoặc sử dụng thanh tìm kiếm để khám phá thêm phim yêu thích.</p>
+          <hr>
+          <p class="mb-0">
+            📢 <a href="/notice" class="alert-link">Xem hướng dẫn sử dụng</a> để biết thêm chi tiết nhé!
+          </p>
+        </div>
+      {{else}}
+        <!-- Nếu chưa đăng nhập -->
+        <div class="alert alert-danger text-center alert-info" role="alert">
+          <h4 class="alert-heading">🔒 Bạn chưa đăng nhập!</h4>
+          <p>Đăng nhập hoặc tạo tài khoản ngay để lưu lại danh sách phim yêu thích và nhận các gợi ý phim hay nhất!</p>
+          <hr>
+          <p class="mb-0">
+            🚀 <a href="/signin" class="alert-link">Đăng nhập</a> | <a href="/signup" class="alert-link">Đăng ký</a>
+          </p>
+          <p class="mt-2">
+            📢 <a href="/notice" class="alert-link">Xem hướng dẫn sử dụng</a> để biết thêm chi tiết.
+          </p>
+        </div>
+      {{/if}}
+
+    {{/if}}
   </div>
 
   <!-- Modal -->
@@ -97,9 +127,7 @@
 
       // Submit the form 
       form.submit(); 
-      
-    })
-
-  });
+      })
+    });
   });
 </script>
