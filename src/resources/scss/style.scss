@@ -154,6 +154,84 @@ hr.custom-hr {
   color: #ffffff;
 }
 
+//Sign in form
+/* Light Mode */
+:root {
+    --bg-color: #ffffff;
+    --text-color: #333;
+    --input-bg: #f8f9fa;
+    --input-border: #ccc;
+    --button-bg: #0d6efd;
+    --button-text: #fff;
+    --subtext-color: #6c757d;
+    --link-color: #0d6efd;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #121212;
+        --text-color: #f5f5f5;
+        --input-bg: #1e1e1e;
+        --input-border: #333;
+        --button-bg: #0a58ca;
+        --button-text: #fff;
+        --subtext-color: #b0b0b0;
+        --link-color: #3ea6ff;
+    }
+}
+
+/* Apply Theme */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.theme-card {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    max-width: 400px;
+    width: 100%;
+    border-radius: 15px;
+}
+
+.theme-text {
+    color: var(--text-color);
+}
+
+.theme-input {
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text-color);
+}
+
+.theme-input:focus {
+    border-color: var(--button-bg);
+    box-shadow: 0 0 5px var(--button-bg);
+}
+
+.theme-subtext {
+    color: var(--subtext-color);
+}
+
+.theme-button {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+}
+
+.theme-link {
+    color: var(--link-color);
+    text-decoration: none;
+}
+
+.theme-link:hover {
+    text-decoration: underline;
+}
+
+.theme-button:hover {
+  background-color: #0d6efda1;
+}
+
 
 
 

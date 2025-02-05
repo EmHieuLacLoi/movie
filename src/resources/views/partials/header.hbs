@@ -22,6 +22,13 @@
         </li>
 
         <li class="nav-item">
+          <a class="nav-link btn btn-outline-light me-2" href="/signin">Đăng nhập</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link btn btn-warning" href="/signup">Đăng ký</a>
+        </li>
+
+        <li class="nav-item">
           <a class="nav-link" href="/new-movie">Phim mới</a>
         </li>
 
@@ -87,6 +94,18 @@
 <form method="POST" class="form-submit" style="display: none;"></form>
 
 <script>
+  function getCookie(name) {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+      let [key, value] = cookie.split('=');
+      key = key.trim();
+      if (key === name) {
+        return decodeURIComponent(value);
+      }
+    }
+    return null;
+  }
+
   function navigateTo(element) {
     // Tìm thẻ <a> bên trong <td> được click
     const link = element.querySelector('a');
@@ -106,15 +125,30 @@
   if (pathName == '/' || pathName == '/home') {
     aTag[0].className = 'nav-link active'
   }
-  if (pathName == '/new-movie') {
+  if (pathName == '/signin') {
     aTag[1].className = 'nav-link active'
   }
-  if (pathName == '/type') {
+  if (pathName == '/signup') {
     aTag[2].className = 'nav-link active'
   }
-  if (pathName == '/notice') {
+  if (pathName == '/new-movie') {
     aTag[3].className = 'nav-link active'
   }
-  
+  if (pathName == '/type') {
+    aTag[4].className = 'nav-link active'
+  }
+  if (pathName == '/notice') {
+    aTag[5].className = 'nav-link active'
+  }
+
+  const user = getCookie("user");
+  const logo = document.querySelector('.navbar-brand')
+  if (user != null){
+    aTag[1].style.display = 'none'
+    aTag[2].style.display = 'none'
+  } else {
+    aTag[0].style.display = 'none'
+    logo.href = '/new-movie'
+  }
 </script>
 <!-- Content -->
