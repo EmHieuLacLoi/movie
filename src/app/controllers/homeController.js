@@ -198,7 +198,7 @@ class HomeController {
       
       if (!user) {
         console.error("Không tìm thấy user!");
-        return res.redirect(prevUrl);
+        return res.redirect('/home');
       }
 
       if (user.movies.includes(slugRemove)) {
@@ -225,7 +225,7 @@ class HomeController {
         name: error.name,
         code: error.code,
       });
-      res.status(500).send("Có lỗi xảy ra khi xóa dữ liệu.");
+      res.render(error, {status: "Có lỗi xảy ra khi xóa dữ liệu." + error});
     }
   }
   
@@ -234,6 +234,9 @@ class HomeController {
     try {
       const data = req.body;
       const prevUrl = req.headers.referer;
+      if (req.cookies["user"] == undefined) {
+        return res.redirect("/home")
+      }
       let username = req.cookies["user"].name;
   
       //Tìm user trước
@@ -241,7 +244,7 @@ class HomeController {
   
       if (!user) {
         console.error("Không tìm thấy user!");
-        return res.redirect(prevUrl);
+        return res.redirect("/home")
       }
   
       //Cập nhật danh sách phim của user
@@ -279,7 +282,7 @@ class HomeController {
       }
     } catch (error) {
       console.error("Lỗi khi cập nhật dữ liệu: ", error);
-      res.redirect(prevUrl);
+      res.render('error', {status: error});
     }
   }    
 }
