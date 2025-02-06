@@ -96,9 +96,12 @@ class HomeController {
     });
   }
 
-  // Show trang 1 phim moi cap nhat
+  // Show cac phim moi cap nhat
   show(req, res, next) {
     let body = 1
+    if (req.query.page) {
+      body = req.query.page
+    }
     api
       .updatedMovieData(body)
       .then((data) => {
@@ -138,53 +141,7 @@ class HomeController {
         res.render("error", { status });
       });
   }
-  
-
-  // Show cac phim moi cap nhat
-  update(req, res, next) {
-    let body = 1
-    if (req.query.page) {
-      body = req.query.page
-    }
-    api
-      .updatedMovieData(body)
-      .then((data) => {
-        let list = data.items;
-        const search_result = [];
-        for (let i = 0; i < list.length; i++) {
-          const info_movie = {};
-          info_movie["name"] = list[i].name;
-          info_movie["slug"] = list[i].slug;
-          info_movie["origin_name"] = list[i].origin_name;
-          if (list[i].poster_url == "" || !list[i].poster_url) {
-            if (list[i].thumb_url.includes(link_img)) {
-              info_movie["thumb_url"] = list[i].thumb_url;
-            } else {
-              info_movie["thumb_url"] = link_img + list[i].thumb_url;
-            }
-          } else {
-            if (list[i].poster_url.includes(link_img)) {
-              info_movie["thumb_url"] = list[i].poster_url;
-            } else {
-              info_movie["thumb_url"] = link_img + list[i].poster_url;
-            }
-          }
-          info_movie["year"] = list[i].year;
-          info_movie["modified_time"] = list[i].modified.time.slice(0, 10)
-          search_result.push(info_movie);
-        }
-        res.render("newMovie", { search_result });
-      })
-      .catch((error) => {
-        let status = error.name
-        if (error.response) {
-          status = error.response.status;
-        }
-        res.render("error", { status });
-      });
-  }
-  
-
+    
   async delete(req, res, next) {
     const id = req.params.id;
   
