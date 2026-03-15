@@ -89,7 +89,8 @@ class HomeController {
           let hasMore = false;
           if (params && params.pagination) {
              const pagination = params.pagination;
-             hasMore = pagination.currentPage < pagination.totalPages; // API limit checks
+             const totalPages = pagination.pageRanges || 1;
+             hasMore = pagination.currentPage < totalPages;
           }
 
           if (isAjax) {
