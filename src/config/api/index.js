@@ -48,4 +48,14 @@ async function checkImageUrls(urls) {
   return results;
 }
 
-module.exports = { getData, updatedMovieData, checkImageUrls }
+async function searchMovieData(keyword) {
+    try {
+        const res = await axios.get(`https://ophim1.com/v1/api/tim-kiem?keyword=${encodeURIComponent(keyword)}`);
+        return res.data;
+    } catch (e) {
+        console.log("Error get data: ", e);
+        throw e; 
+    }
+}
+
+module.exports = { getData, updatedMovieData, checkImageUrls, searchMovieData }

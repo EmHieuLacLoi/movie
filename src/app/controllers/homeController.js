@@ -48,52 +48,59 @@ class HomeController {
   }
 
   search(req, res, next) {
-    const body = req.query.search;
+    const keyword = req.query.search;
 
-    const normalizedQuery = body
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
-    
-    const toSlug = slugify(normalizedQuery)
+    if (!keyword) {
+      return res.render("error", { status: "Vui lòng nhập từ khóa tìm kiếm" });
+    }
 
-    newMovie
-    .find({
-      $or: [
-        { name: { $regex: normalizedQuery, $options: 'i' } },
-        { name: { $regex: body, $options: 'i' } },
-        { slug: { $regex: toSlug, $options: 'i' } },
-        { slug: { $regex: body, $options: 'i' } },
-        { origin_name: {$regex: normalizedQuery, $options: 'i' } },
-        { origin_name: {$regex: body, $options: 'i' } }
-      ]
-    })
-    .then((movie) => {
-      if (!movie || movie.length === 0) {
-        console.warn("No movies found");
-        res.render("error", { error });
-      }
-      else {
-        movie = multipleMongooseToObject(movie);
-        movie.forEach(m => {
-          if (!m.poster.includes(link_img))
-            m.poster = link_img + m.poster
-        })
-        res.render("search", { movie });
-      }
-    })
-    .catch((error) => {
-      console.error("Query Error:", {
-        message: error.message,
-        name: error.name,
-        code: error.code,
+    api.searchMovieData(keyword)
+      .then((data) => {
+        if (data.status === 'success' && data.data && data.data.items && data.data.items.length > 0) {
+          let list = data.data.items;
+          const movie = [];
+          
+          let domainImage = "https://phimimg.com/";
+          if (data.data.APP_DOMAIN_CDN_IMAGE) {
+            domainImage = data.data.APP_DOMAIN_CDN_IMAGE + "/";
+          }
+
+          for (let i = 0; i < list.length; i++) {
+            const info_movie = {};
+            info_movie["name"] = list[i].name;
+            info_movie["slug"] = list[i].slug;
+            info_movie["origin_name"] = list[i].origin_name;
+
+            let poster = list[i].poster_url || list[i].thumb_url || "";
+            if (poster && !poster.startsWith("http")) {
+                // Ophim often returns relative image paths, prepending with domainImage or link_img
+                // Using domainImage if available, else link_img
+                info_movie["poster"] = domainImage + poster;
+            } else {
+                info_movie["poster"] = poster;
+            }
+            
+            info_movie["year"] = list[i].year || "";
+            movie.push(info_movie);
+          }
+          res.render("search", { movie });
+        } else {
+          console.warn("No movies found");
+          res.render("error", { status: "Không tìm thấy phim rồi!!!!" });
+        }
+      })
+      .catch((error) => {
+        console.error("Query Error:", {
+          message: error.message,
+          name: error.name,
+          code: error.code,
+        });
+
+        // Send error response
+        res.render("error", {
+          status: "Không tìm thấy phim rồi!!!!",
+        });
       });
-
-      // Send error response
-      res.render("error", {
-        status: "Không tìm thấy phim rồi!!!!",
-      });
-    });
   }
 
   // Show cac phim moi cap nhat
