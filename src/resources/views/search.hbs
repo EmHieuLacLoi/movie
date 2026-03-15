@@ -8,7 +8,7 @@
       </tr>
     </thead>
     <tbody class="table-content">
-      {{#each (limit movie 10)}}
+      {{#each movie}}
         <tr>
           <td>
             <div class="movie-info">
@@ -130,56 +130,76 @@
   attachAddButtonListeners();
 
   // JavaScript - Thêm logic nút "Xem thêm"
-  const movies = {{{json movie}}}; // Dữ liệu danh sách phim từ Handlebars
-  let currentIndex = 10;           // Chỉ số hiện tại
-  const moviesPerPage = 10;        // Số lượng phim hiển thị mỗi lần nhấn "Xem thêm"
+  let currentPage = {{currentPage}};
+  let keyword = "{{keyword}}";
+  let hasMore = {{hasMore}};
+
   const moreBtn = document.getElementById('load-more');
   const tbody = document.querySelector('.table-content');
 
-  if (movies.length <= 10) {
+  if (!hasMore) {
     moreBtn.style.display = 'none';
   } else {
-    moreBtn.addEventListener('click', () => {
-      for (let i = currentIndex; i < currentIndex + moviesPerPage; i++) {
-        if (i >= movies.length) {
-          moreBtn.style.display = 'none';
-          break; // Dừng nếu không còn phim
+    moreBtn.addEventListener('click', async () => {
+      moreBtn.disabled = true;
+      moreBtn.innerText = "Đang tải...";
+      try {
+        currentPage++;
+        const response = await fetch(`/search?search=${encodeURIComponent(keyword)}&page=${currentPage}&ajax=true`);
+        const data = await response.json();
+
+        if (data.status === 'success') {
+          const newMovies = data.movie;
+          
+          newMovies.forEach(movie => {
+            const safeName = movie.name.replace(/"/g, '&quot;');
+            const row = `
+              <tr>
+                <td>
+                  <div class="movie-info">
+                    <img src="${movie.poster}" alt="${safeName}" class="movie-poster" />
+                    <div class="movie-names">
+                      <div class="primary-name"><a href="/movie/${movie.slug}">${movie.name}</a></div>
+                      <div class="origin-name text-sm text-gray-600"><a href="/movie/${movie.slug}">${movie.origin_name}</a></div>
+                    </div>
+                  </div>
+                </td>
+                <td>${movie.year}</td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-outline-light btn-sm btn-add"
+                    data-bs-toggle="modal"
+                    data-bs-target="#staticBackdrop"
+                    data-name="${safeName}"
+                    data-slug="${movie.slug}"
+                    data-poster="${movie.poster}"
+                    data-year="${movie.year}"
+                  >Thêm</button>
+                </td>
+              </tr>
+            `;
+            tbody.innerHTML += row;
+          });
+
+          // Gọi lại hàm attachAddButtonListeners để gắn sự kiện cho các nút mới
+          attachAddButtonListeners();
+
+          if (!data.hasMore) {
+            moreBtn.style.display = 'none';
+          }
+        } else {
+          alert(data.message || "Lỗi tải thêm phim");
+          currentPage--; 
         }
-        const movie = movies[i];
-        const row = `
-          <tr>
-            <td>
-              <div class="movie-info">
-                <img src="${movie.poster}" alt="${movie.name}" class="movie-poster" />
-                <div class="movie-names">
-                  <div class="primary-name"><a href="/movie/${movie.slug}">${movie.name}</a></div>
-                  <div class="origin-name text-sm text-gray-600"><a href="/movie/${movie.slug}">${movie.origin_name}</a></div>
-                </div>
-              </div>
-            </td>
-            <td>${movie.year}</td>
-            <td>
-              <button
-                type="button"
-                class="btn btn-outline-light btn-sm btn-add"
-                data-bs-toggle="modal"
-                data-bs-target="#staticBackdrop"
-                data-name="${movie.name}"
-                data-slug="${movie.slug}"
-                data-poster="${movie.poster}"
-                data-year="${movie.year}"
-              >Thêm</button>
-            </td>
-          </tr>
-        `;
-        tbody.innerHTML += row; // Thêm hàng vào bảng
+      } catch (error) {
+         console.error("Error loading more movies: ", error);
+         alert("Có lỗi xảy ra khi tải thêm phim");
+         currentPage--;
+      } finally {
+         moreBtn.disabled = false;
+         moreBtn.innerText = "Xem thêm";
       }
-
-      // Cập nhật chỉ số hiện tại
-      currentIndex += moviesPerPage;
-
-      // Gọi lại hàm attachAddButtonListeners để gắn sự kiện cho các nút mới
-      attachAddButtonListeners();
     });
   }
 </script>

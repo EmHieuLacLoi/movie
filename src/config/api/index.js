@@ -48,9 +48,9 @@ async function checkImageUrls(urls) {
   return results;
 }
 
-async function searchMovieData(keyword) {
+async function searchMovieData(keyword, page = 1) {
     try {
-        const res = await axios.get(`https://ophim1.com/v1/api/tim-kiem?keyword=${encodeURIComponent(keyword)}`);
+        const res = await axios.get(`https://ophim1.com/v1/api/tim-kiem?keyword=${encodeURIComponent(keyword)}&page=${page}`);
         return res.data;
     } catch (e) {
         console.log("Error get data: ", e);

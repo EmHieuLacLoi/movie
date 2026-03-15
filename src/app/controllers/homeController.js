@@ -49,12 +49,15 @@ class HomeController {
 
   search(req, res, next) {
     const keyword = req.query.search;
+    const page = parseInt(req.query.page) || 1;
+    const isAjax = req.query.ajax === 'true';
 
     if (!keyword) {
+      if (isAjax) return res.json({ status: "error", message: "Vui lòng nhập từ khóa tìm kiếm" });
       return res.render("error", { status: "Vui lòng nhập từ khóa tìm kiếm" });
     }
 
-    api.searchMovieData(keyword)
+    api.searchMovieData(keyword, page)
       .then((data) => {
         if (data.status === 'success' && data.data && data.data.items && data.data.items.length > 0) {
           let list = data.data.items;
@@ -62,7 +65,7 @@ class HomeController {
           
           let domainImage = "https://phimimg.com/";
           if (data.data.APP_DOMAIN_CDN_IMAGE) {
-            domainImage = data.data.APP_DOMAIN_CDN_IMAGE + "/";
+            domainImage = data.data.APP_DOMAIN_CDN_IMAGE + "/uploads/movies/";
           }
 
           for (let i = 0; i < list.length; i++) {
@@ -73,8 +76,6 @@ class HomeController {
 
             let poster = list[i].poster_url || list[i].thumb_url || "";
             if (poster && !poster.startsWith("http")) {
-                // Ophim often returns relative image paths, prepending with domainImage or link_img
-                // Using domainImage if available, else link_img
                 info_movie["poster"] = domainImage + poster;
             } else {
                 info_movie["poster"] = poster;
@@ -83,9 +84,22 @@ class HomeController {
             info_movie["year"] = list[i].year || "";
             movie.push(info_movie);
           }
-          res.render("search", { movie });
+
+          const params = data.data.params;
+          let hasMore = false;
+          if (params && params.pagination) {
+             const pagination = params.pagination;
+             hasMore = pagination.currentPage < pagination.totalPages; // API limit checks
+          }
+
+          if (isAjax) {
+            return res.json({ status: 'success', movie, hasMore, currentPage: page });
+          }
+
+          res.render("search", { movie, keyword, currentPage: page, hasMore });
         } else {
           console.warn("No movies found");
+          if (isAjax) return res.json({ status: "error", message: "Không tìm thấy phim rồi!!!!" });
           res.render("error", { status: "Không tìm thấy phim rồi!!!!" });
         }
       })
@@ -97,6 +111,7 @@ class HomeController {
         });
 
         // Send error response
+        if (isAjax) return res.json({ status: "error", message: "Không tìm thấy phim rồi!!!!" });
         res.render("error", {
           status: "Không tìm thấy phim rồi!!!!",
         });
